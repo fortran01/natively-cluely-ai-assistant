@@ -1,4 +1,5 @@
 import { BrowserWindow, screen, app, ipcMain, IpcMainEvent } from "electron"
+import { applyNavigationGuards } from "./utils/windowSecurity"
 import path from "node:path"
 
 const isDev = process.env.NODE_ENV === "development"
@@ -425,6 +426,7 @@ export class CropperWindowHelper {
         }
 
         this.cropperWindow = new BrowserWindow(windowSettings)
+        applyNavigationGuards(this.cropperWindow)
 
         // On Windows, ensure window spans all monitors by explicitly setting bounds
         // This is needed because BrowserWindow might auto-adjust to primary monitor

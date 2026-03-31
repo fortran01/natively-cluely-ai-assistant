@@ -1,4 +1,5 @@
 import { BrowserWindow, screen, app } from "electron"
+import { applyNavigationGuards } from "./utils/windowSecurity"
 import path from "node:path"
 
 const isDev = process.env.NODE_ENV === "development"
@@ -154,6 +155,7 @@ export class ModelSelectorWindowHelper {
         }
 
         this.window = new BrowserWindow(windowSettings)
+        applyNavigationGuards(this.window)
 
         if (process.platform === "darwin") {
             // Initial defaults - will be updated in showWindow

@@ -1,5 +1,6 @@
 import { BrowserWindow, screen, app } from "electron"
 import { WindowHelper } from "./WindowHelper"
+import { applyNavigationGuards } from "./utils/windowSecurity"
 import path from "node:path"
 
 const isDev = process.env.NODE_ENV === "development"
@@ -174,6 +175,7 @@ export class SettingsWindowHelper {
         }
 
         this.settingsWindow = new BrowserWindow(windowSettings)
+        applyNavigationGuards(this.settingsWindow)
 
         if (process.platform === "darwin") {
             this.settingsWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
