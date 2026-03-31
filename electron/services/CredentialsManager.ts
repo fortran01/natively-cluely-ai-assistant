@@ -387,11 +387,17 @@ export class CredentialsManager {
     private saveCredentials(): void {
         try {
             if (!safeStorage.isEncryptionAvailable()) {
-                console.warn('[CredentialsManager] Encryption not available, falling back to plaintext');
-                // Fallback: save as plaintext (less secure, but functional)
+                console.warn(
+                    '[CredentialsManager] OS encryption (safeStorage) is unavailable. ' +
+                    'API keys will be stored in plaintext at: ' + CREDENTIALS_PATH + '.json — ' +
+                    'restrict access to this machine and user account.'
+                );
+                // Fallback: save as plaintext with owner-only permissions (0600).
+                // Write to a tmp file first, then chmod before the atomic rename so the
+                // final file is never world-readable even momentarily.
                 const plainPath = CREDENTIALS_PATH + '.json';
                 const tmpPlain = plainPath + '.tmp';
-                fs.writeFileSync(tmpPlain, JSON.stringify(this.credentials));
+                fs.writeFileSync(tmpPlain, JSON.stringify(this.credentials), { mode: 0o600 });
                 fs.renameSync(tmpPlain, plainPath);
                 return;
             }
