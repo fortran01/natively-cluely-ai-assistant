@@ -398,11 +398,6 @@ export class CredentialsManager {
                 const plainPath = CREDENTIALS_PATH + '.json';
                 const tmpPlain = plainPath + '.tmp';
                 fs.writeFileSync(tmpPlain, JSON.stringify(this.credentials), { mode: 0o600 });
-                try {
-                    fs.chmodSync(tmpPlain, 0o600);
-                } catch {
-                    // chmod may fail on Windows — not fatal, rename still proceeds
-                }
                 fs.renameSync(tmpPlain, plainPath);
                 return;
             }
