@@ -2,6 +2,7 @@
 import { BrowserWindow, screen, app, Menu } from "electron"
 import { AppState } from "./main"
 import { KeybindManager } from "./services/KeybindManager"
+import { applyNavigationGuards } from "./utils/windowSecurity"
 import path from "node:path"
 
 const isEnvDev = process.env.NODE_ENV === "development"
@@ -199,6 +200,7 @@ export class WindowHelper {
     }
 
     this.launcherWindow.setContentProtection(this.contentProtection)
+    applyNavigationGuards(this.launcherWindow)
 
     this.launcherWindow.loadURL(`${startUrl}?window=launcher`)
       .then(() => console.log('[WindowHelper] loadURL success'))
@@ -238,6 +240,7 @@ export class WindowHelper {
 
     this.overlayWindow = new BrowserWindow(overlaySettings)
     this.overlayWindow.setContentProtection(this.contentProtection)
+    applyNavigationGuards(this.overlayWindow)
 
     if (process.platform === "darwin") {
       this.overlayWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
